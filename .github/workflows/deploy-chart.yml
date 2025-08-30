@@ -36,7 +36,7 @@ jobs:
           cr upload ./chart --owner nkaftantzis -r valheim-k8s --token $CH_TOKEN -p .deploy || echo "$version already exists"
 
       - name: Checkout gh-pages branch
-        uses: actions/checkout@v1
+        uses: actions/checkout@v3
         with:
           ref: 'gh-pages'
           clean: false
