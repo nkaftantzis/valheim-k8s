@@ -1,5 +1,5 @@
 name: Deploy helm chart
-on: 
+on:
   push:
     branches:
       - main
@@ -22,35 +22,35 @@ jobs:
           echo "Installing chart-releaser..."
           curl -sSL https://github.com/helm/chart-releaser/releases/download/v0.2.1/chart-releaser_0.2.1_linux_amd64.tar.gz | tar xzf -
           sudo mv cr /bin/cr
-      
+
       - name: Release
         run: |
           export GIT_EMAIL=${{ secrets.GIT_EMAIL }}
           export CH_TOKEN=${{ secrets.GIT_TOKEN }}
-          export GIT_REPOSITORY_URL=https://github.com/addyvan/valheim-k8s
-          
+          export GIT_REPOSITORY_URL=https://github.com/nkaftantzis/valheim-k8s
+
           version=$(cat version)
-          
+
           helm package --version=$version ./chart --destination .deploy
-          cr upload ./chart --owner addyvan -r valheim-k8s --token $CH_TOKEN -p .deploy || echo "$version already exists"
-      
+          cr upload ./chart --owner nkaftantzis -r valheim-k8s --token $CH_TOKEN -p .deploy || echo "$version already exists"
+
       - name: Checkout gh-pages branch
         uses: actions/checkout@v1
         with:
           ref: 'gh-pages'
           clean: false
-          
+
       - name: Update chart index
         run: |
-          cr index -i ./index.yaml -p .deploy --owner addyvan --repo valheim-k8s || echo "index.yaml did not change"
-      
+          cr index -i ./index.yaml -p .deploy --owner nkaftantzis --repo valheim-k8s || echo "index.yaml did not change"
+
       - name: commit index changes
         run: |
           git add index.yaml
           git config --local user.email ${{ secrets.GIT_EMAIL }}
-          git config --local user.name addyvan
+          git config --local user.name nkaftantzis
           git commit -m "release $version" || echo "No changes to commit"
-      
+
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
