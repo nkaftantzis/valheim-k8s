@@ -7,6 +7,7 @@ on:
     - '.github/workflows/deploy-chart.yml'
     - 'chart/**'
     - 'version'
+  workflow_dispatch:
 jobs:
   deploy-valheim-helm-chart:
     runs-on: ubuntu-latest
